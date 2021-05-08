@@ -27,8 +27,6 @@ app.get('/', (req, res) => {
 })
 
 app.post('/upload', upload.single('wavFile'), (req, res) => {
-    // console.log(req.headers)
-    // res.send('succes: '+ req.file.originalname)
     let result = spawn('python', ['voiceAnalyser.py', req.file.originalname, 'file'])
     result.stdout.on('data', (voiceData) => {
         voiceData = JSON.parse(voiceData.toString())
@@ -38,15 +36,12 @@ app.post('/upload', upload.single('wavFile'), (req, res) => {
         jdenticon.configure({
             hues: [hueValue]
             })
-        // jdenticon.configure({
-        //     hues: [357.0]
-        // });
         let icon = jdenticon.toSvg(hash(voiceData), 200)
         output['data'] = voiceData
         output['identicon'] = icon.toString()
         fs.writeFileSync("file/"+req.file.originalname+".svg", icon)
         // res.json(output)
-        res.send(icon + '<br>'+ JSON.stringify(voiceData))
+        res.send(icon + '<br>' + req.file.originalname + '<br>' + JSON.stringify(voiceData))
     })
 })
 
