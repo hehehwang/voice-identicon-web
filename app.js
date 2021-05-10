@@ -23,7 +23,29 @@ app.use(express.urlencoded({
 }));
 
 app.get('/', (req, res) => {
-    res.send('Hello World!')
+    const content = `
+    <!DOCTYPE html>
+    <html lang="ko">
+    <head>
+        <meta charset="UTF-8">
+        <title>Document</title>
+        <style>
+        </style>
+    </head>
+    <body>
+        <form method="post" enctype="multipart/form-data" action="/upload">
+            <label for="soundFile">Let me hear your voice</label>
+            <br>
+            <input type="file" name="wavFile" id="soundFile" accept=".wav" capture="microphone">
+            <br>
+            <div>
+                <button>Submit</button>
+            </div>
+        </form>
+    </body>
+    </html>
+    `
+    res.send(content)
 })
 
 app.post('/upload', upload.single('wavFile'), (req, res) => {
@@ -35,13 +57,15 @@ app.post('/upload', upload.single('wavFile'), (req, res) => {
         console.log(req.file.originalname, voiceData.f0_mean, voiceData.f0_median, hueValue, `${hueValue}`)
         jdenticon.configure({
             hues: [hueValue]
-            })
+        })
         let icon = jdenticon.toSvg(hash(voiceData), 200)
         output['data'] = voiceData
         output['identicon'] = icon.toString()
-        fs.writeFileSync("file/"+req.file.originalname+".svg", icon)
+        fs.writeFileSync("file/" + req.file.originalname + ".svg", icon)
         // res.json(output)
-        res.send(icon + '<br>' + req.file.originalname + '<br>' + JSON.stringify(voiceData))
+        res.send(icon + '<br>' +
+            req.file.originalname + '<br>' +
+            JSON.stringify(voiceData))
     })
 })
 
