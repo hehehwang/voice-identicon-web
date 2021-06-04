@@ -1,7 +1,7 @@
 {
   "name": "voice-web",
   "version": "1.0.0",
-  "description": "voice-web",
+  "description": "voice-identicon-web",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
